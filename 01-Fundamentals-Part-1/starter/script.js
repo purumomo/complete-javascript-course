@@ -81,6 +81,15 @@
     //字符串的连接
     const firstNameCao = 'CAO';
     const job = 'fontEndEngineer';
+    const birthYear1 = 1999;
+    const year = 2043;
+    //这里也涉及到了数字的拼接
+    const CAO = "I'm " + firstNameCao + ",a " + (year - birthYear1) + "years old"+ job + "!";
+    console.log(CAO);
+
+    //反斜杠的写法
+    const newCao = "I'm " +_
+
 
 
                      
