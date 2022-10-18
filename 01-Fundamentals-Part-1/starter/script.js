@@ -87,9 +87,21 @@
     const CAO = "I'm " + firstNameCao + ",a " + (year - birthYear1) + "years old"+ job + "!";
     console.log(CAO);
 
-    //反斜杠的写法
-    const newCao = "I'm " +_
+    //反斜杠的写法`` 又叫做Shell用法
+    const newCao = `I'm ${firstName} ,a ${year - birthYear1} , a ${job}`;
+    console.log(newCao);
+    const ceshiXieGang = `This is a xiegang test`;
+    console.log(ceshiXieGang);
 
+    //斜杠的运用 换行
+    console.log('String with \n\
+    multiple \n\
+    lines');
+
+    console.log(`String 
+    multiple 
+    lines`);
 
 
                      
+
