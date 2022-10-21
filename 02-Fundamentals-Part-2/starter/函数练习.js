@@ -23,3 +23,6 @@ checkWinner(avergeD,avergeK);
 averge1 = calcAverge(85,54,41);
 averge2 = calcAverge(23,34,27);
 checkWinner(averge1,averge2);
+
+//test for the green shit
+
