@@ -13,3 +13,5 @@ console.log(calcAge2(1997));
 //第二种可以使用Nodejs node -v 查看版本
 // npm install live-server
 //安装npm liveserver → npm install live-server-g
+
+//
