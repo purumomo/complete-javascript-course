@@ -34,3 +34,44 @@ function calAge(birthyear){
 
 const quanJuBianLiang = 'jj';
 calAge(1987);
+
+//讨论提升变量hositing
+
+// console.log(me);
+// console.log(job);
+// console.log(year); 这种情况都不行 因为const 和 let 不可以被hositing 他们是定义了的值
+
+var me = 'jjbom';
+let job = 'programmer';
+const year = 1997;
+
+//函数 在声明函数之前调用
+console.log(add(2,3));
+
+function add(a,b){//只有这种可以hosisting
+    return a+b;
+};
+const addE = function (a,b){
+    return a+b;
+};
+
+const addA = (a,b) =>{
+    return a+b;
+};
+
+//例子
+console.log(number);//这里提升变量导致var number = undifine; undifine = false
+//如果number = false
+if(!number)deleteShoppingCar();
+var number = 10;
+function deleteShoppingCar(){
+    console.log('删除了JJ')
+};
+
+var x = 1;
+let y = 2;
+const z = 3;
+
+console.log(x === window.x); //true
+console.log(y === window.y); //true
+console.log(z === window.z); //true
