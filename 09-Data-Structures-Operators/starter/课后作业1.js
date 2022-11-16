@@ -59,11 +59,14 @@ const game = {
 
 //1为每支球队创建一个球员数组（变量'players1'和'players2'）✔
 const [players1,players2] = game.players;
+
 //2.任何球员阵列中的第一个球员是守门员，其他球员是场上球员。对于拜仁慕尼黑（第 1 队），
 //创建一个包含守门员姓名的变量 ('gk')，以及一个包含所有剩余 10 名场上球员的数组 ('fieldPlayers')✔
 const [gk,...fieldPlayers] = players1;
+
 //3. 创建一个数组“allPlayers”，包含两支球队的所有球员（22 名球员）✔
 const allplayers = [...players1,...players2];
+
 //4. 比赛期间，拜仁慕尼黑（1队）使用了3名替补球员。因此，创建一个新数组 ('players1Final')，其中包含所有原始 team1 球员以及 'Thiago'、'Coutinho' 和 'Perisic'✔
 const players1final = [...players1, 'Thiago', 'Coutinho', 'Perisic'];
 
