@@ -74,6 +74,7 @@ const loginEmail = 'Hello@gmail.com \n';
 // const xiujianEmail = lowerEmail.trim();
 // console.log(xiujianEmail);
 
+//trim 是取掉头部的空格
 const normailizedEmail = loginEmail.toLowerCase().trim();
 console.log(email === normailizedEmail);//return true of false
 
@@ -163,8 +164,66 @@ const planesIn = function(n){
 planesIn(5);
 
 
+// 编码挑战#4
 
+/*
+编写一个程序，接收用 下划线编写的变量名列表并将它们转换为 camelCase。
 
+输入将来自插入到 DOM 中的文本区域（参见下面的代码），当按下按钮时会发生转换。
 
+此测试数据（粘贴到 空白里） 按下按钮发生转换
+underscore_case
+ first_name
+Some_Variable 
+  calculate_AGE
+delayed_departure
 
+应该产生这个输出（5 个单独的 console.log 输出）
+underscoreCase      ✅
+firstName           ✅✅
+someVariable        ✅✅✅
+calculateAge        ✅✅✅✅
+delayedDeparture    ✅✅✅✅✅
 
+提示 1：记住哪个字符在 textarea 中定义了一个新行😉
+提示 2：该解决方案只需要对由 2 个单词组成的变量起作用，例如 a_b
+提示 3：开始时不要担心 ✅。只有在变量名转换工作之后才能解决这个问题😉
+提示 4：挑战是故意很难，所以开始观察解决方案，以防你被卡住。然后暂停并继续！
+
+之后，用自己的测试数据进行测试！
+
+祝你好运😀
+*/
+//创建一个新的文字窗口和按钮
+document.body.append(document.createElement('textarea'));
+document.body.append(document.createElement('button'));
+
+//读取数字
+const shuju = document.querySelector('textarea');
+
+//点击按钮事件
+const button = document.querySelector('button');
+
+button.addEventListener('click',function(){
+    const shuju = document.querySelector('textarea').value;
+    const rows = shuju.split('\n');
+    console.log(rows);
+    for(const [i,x] of rows.entries()){
+        const [first,second] = x.toLowerCase().trim().split('_'); //所有小写去空格删掉_
+        const output = `${first}${second.replace(second[0],second[0].toUpperCase())}`;
+        console.log(`${output.padEnd(20)}${'✔'.repeat(i+1)}`);
+    }
+});
+
+        // const 字符转换 = para => {
+          //只能适用于一次字符串转换
+          //   const i = para.indexOf('_');
+          //   console.log(
+          //     para[0].toLowerCase() +
+          //       para.slice(1, i) +
+          //       para[i + 1].toUpperCase() +
+          //       para.slice(i + 2)
+          //   );
+        //   const rows = para.split('\n');
+        // };
+        // 字符转换(liang);
