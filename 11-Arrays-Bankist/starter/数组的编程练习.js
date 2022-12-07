@@ -78,6 +78,7 @@ const ages1 = [5, 2, 4, 1, 15, 8, 3];
 const ages2 =  [16, 6, 10, 5, 6, 1, 4];
 const 年龄数组 = ages1.concat(ages2);
 console.log(年龄数组);
+
 const 计算年龄 = function(){
   const 人类年龄 = [];
   for (let i = 0; i <= 年龄数组.length - 1; i++) {
@@ -101,4 +102,24 @@ const 计算年龄 = function(){
 };
 console.log(计算年龄(年龄数组),`成年狗的平均年龄是:` + 平均年龄);
 
+// 编码 #3
 
+/* 
+重写上一个挑战中的“calcAverageHumanAge”函数，
+但这次作为箭头函数，并使用链接！
+
+TEST DATA 1: [5, 2, 4, 1, 15, 8, 3]
+TEST DATA 2: [16, 6, 10, 5, 6, 1, 4]
+
+GOOD LUCK 😀
+*/
+
+const calcAverageHumanAge = ages => 
+ages
+  .map(age => (age <= 2 ? 2 * age : 16 + age * 4))
+  .filter(age => age >= 18)
+  .reduce(
+    (acc, age, i, arr) => acc + age / arr.length,0);
+const avg1 = calcAverageHumanAge([5, 2, 4, 1, 15, 8, 3]);
+const avg2 = calcAverageHumanAge([16, 6, 10, 5, 6, 1, 4]);
+console.log(avg1, avg2);
