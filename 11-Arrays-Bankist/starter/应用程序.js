@@ -31,7 +31,14 @@ const account4 = {
   interestRate: 1,
   pin: 4444,
 };
-const account = [account1, account2, account3, account4];
+
+const account5 = {
+  owner:'jj',
+  movements:[1000,2,3,4,5],
+  interestRate:1,
+  pin:1,
+}
+const account = [account1, account2, account3, account4,account5];
 /////////////////////////////////////////////////
 // 所使用的元素
 const labelWelcome = document.querySelector('.welcome');
@@ -61,9 +68,12 @@ const inputClosePin = document.querySelector('.form__input--pin');
 /////////////////////////////////////////////////
 // 所调用的函数 
 //函数1 调用js用来更改html上的数值显示
-const displayMovements = function (movements, sort = true) {
+const displayMovements = function (movements, sort = false) {
   containerMovements.innerHTML = '';
+
   const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+
+
   movs.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
     const html = `
@@ -80,9 +90,9 @@ const displayMovements = function (movements, sort = true) {
 
 //函数2  创建一个累加使用Reduce的函数 来更改html上的总和
 const labelBalance = document.querySelector('.balance__value');
-const calcDisplayBalance = function (movements) {
-  const balance = movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `${balance} EUR`;
+const calcDisplayBalance = function (acc) {
+  acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
+  labelBalance.textContent = `${acc.balance} EUR`;
 };
  
 //函数3 用来显示支出和收入额度
@@ -107,7 +117,25 @@ const calcDisplaySummary = function (acc) {
   labelSumInterest.textContent = `${利息}＄`
 
 };
- 
+const 用户名缩写 = function (acc){
+  acc.forEach(function (acc){
+    acc.username = acc.owner
+    .toLowerCase()
+    .split(' ')
+    .map(name => name[0])
+    .join('');
+  });
+}
+用户名缩写(account);
+
+const updateUI = function (acc){
+  // 显示存取钱
+  displayMovements(acc.movements);
+  //显示Balance
+  calcDisplayBalance(acc);
+  //显示总账
+  calcDisplaySummary(acc);
+};
 
 /////////////////////////////////////////////////
 // 登录界面
@@ -125,13 +153,78 @@ btnLogin.addEventListener('click',function(e){
     //清除字段
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
-    //显示存取钱
-    displayMovements(当前账户.movements);
-    //显示Balance
-    calcDisplayBalance(当前账户.movements);
-    //显示总账
-    calcDisplaySummary(当前账户);
+
+    //更新UI
+    updateUI(当前账户);
     console.log('登陆成功');
   }
 });
 
+/////////////////////////////////////////////////
+// 转账功能
+btnTransfer.addEventListener('click',function(e){
+  e.preventDefault();
+  const amount = Number(inputTransferAmount.value);
+  const receiverAcc = account.find(
+    acc => acc.username === inputTransferTo.value
+  );
+  inputTransferAmount.value = inputTransferTo.value = '';
+
+  if (
+    amount > 0 &&
+    receiverAcc &&
+    当前账户.balance >= amount &&
+    receiverAcc?.username !== 当前账户.username
+  ) {
+  }
+  //转换账户
+  当前账户.movements.push(-amount);
+  receiverAcc.movements.push(amount);
+  //更新UI
+  updateUI(当前账户);
+});
+
+/////////////////////////////////////////////////
+// 关闭账户功能
+btnClose.addEventListener('click',function(e){
+  e.preventDefault();
+
+  if (
+    inputCloseUsername.value === 当前账户.username &&
+    Number(inputClosePin.value) === 当前账户.pin
+  ) {
+    const index = account.findIndex(acc => acc.username === 当前账户.username);
+    console.log(index);
+    //.indexOF(23)
+    //删除账户
+    account.splice(index, 1);
+    //隐藏UI
+    containerApp.style.opacity = 0;
+  } /////////////////////////////////////////////////
+  // 关闭账户功能
+  inputCloseUsername.value = inputClosePin.value = '';
+});
+
+/////////////////////////////////////////////////
+// 申请贷款功能
+btnLoan.addEventListener('click',function(e){
+  e.preventDefault();
+  const amount = Number(inputLoanAmount.value);
+  
+  if(amount > 0 && 当前账户.movements.some(mov => mov >= amount * 0.1)){
+    //添加movments
+    当前账户.movements.push(amount);
+
+    //updateUI
+    updateUI(当前账户)
+  };
+});
+
+let sorted = false;
+/////////////////////////////////////////////////
+// 实现排序功能
+btnSort.addEventListener('click',function(e){
+  e.preventDefault();
+  displayMovements(当前账户.movements, !sorted);
+  sorted = !sorted;
+});
