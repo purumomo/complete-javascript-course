@@ -228,3 +228,18 @@ btnSort.addEventListener('click',function(e){
   displayMovements(当前账户.movements, !sorted);
   sorted = !sorted;
 });
+
+
+//假设你没有Movements这个代码块
+//你需要从UI上面获取数值 并且SUM怎么办?
+
+labelBalance.addEventListener('click',function(){
+  const movementsUI = Array.from(
+    //从结果中获取数组
+    document.querySelectorAll('.movements__value'),
+    //映射这个初始函数转换成我们想要的带有数字的数组
+    el => el.textContent.replace('€', ''),
+  )
+  console.log(movementsUI)
+  movementsUI2 = [...document.querySelectorAll('.movements__value')];
+});
