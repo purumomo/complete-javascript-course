@@ -8,40 +8,40 @@
 // Data
 
 // DIFFERENT DATA! Contains movement dates, currency and locale
-const account1 = {
-  owner: 'Jonas Schmedtmann',
-  movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
-  interestRate: 1.2, // %
-  pin: 1111,
-};
+// const account1 = {
+//   owner: 'Jonas Schmedtmann',
+//   movements: [200, 450, -400, 3000, -650, -130, 70, 1300],
+//   interestRate: 1.2, // %
+//   pin: 1111,
+// };
 
-const account2 = {
-  owner: 'Jessica Davis',
-  movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
-  interestRate: 1.5,
-  pin: 2222,
-};
+// const account2 = {
+//   owner: 'Jessica Davis',
+//   movements: [5000, 3400, -150, -790, -3210, -1000, 8500, -30],
+//   interestRate: 1.5,
+//   pin: 2222,
+// };
 
-const account3 = {
-  owner: 'Steven Thomas Williams',
-  movements: [200, -200, 340, -300, -20, 50, 400, -460],
-  interestRate: 0.7,
-  pin: 3333,
-};
+// const account3 = {
+//   owner: 'Steven Thomas Williams',
+//   movements: [200, -200, 340, -300, -20, 50, 400, -460],
+//   interestRate: 0.7,
+//   pin: 3333,
+// };
 
-const account4 = {
-  owner: 'Sarah Smith',
-  movements: [430, 1000, 700, 50, 90],
-  interestRate: 1,
-  pin: 4444,
-};
+// const account4 = {
+//   owner: 'Sarah Smith',
+//   movements: [430, 1000, 700, 50, 90],
+//   interestRate: 1,
+//   pin: 4444,
+// };
 
-const account5 = {
-  owner: 'jj',
-  movements: [1000, 2, 3, 4, 5],
-  interestRate: 1,
-  pin: 1,
-};
+// const account5 = {
+//   owner: 'jj',
+//   movements: [1000, 2, 3, 4, 5],
+//   interestRate: 1,
+//   pin: 1,
+// };
 const account6 = {
   owner: 'Jonas Schmedtmann',
   movements: [200, 455.23, -306.5, 25000, -642.21, -133.9, 79.97, 1300],
@@ -56,7 +56,7 @@ const account6 = {
     '2020-05-08T14:11:59.604Z',
     '2020-05-27T17:01:17.194Z',
     '2020-07-11T23:36:17.929Z',
-    '2020-07-12T10:51:36.790Z',
+    '2022-12-15T10:51:36.790Z',
   ],
   currency: 'EUR',
   locale: 'pt-PT', // de-DE
@@ -82,7 +82,7 @@ const account7 = {
   locale: 'en-US',
 };
 
-const account = [account1, account2,account3,account4,account5,account6,account7];
+const account = [account6,account7];
 
 'use strict';
 /////////////////////////////////////////////////
@@ -121,19 +121,57 @@ const inputClosePin = document.querySelector('.form__input--pin');
 /////////////////////////////////////////////////
 // 所调用的函数
 //函数1 调用js用来更改html上的数值显示
-const displayMovements = function (movements, sort = false) {
+//对时间进行格式化
+const 格式化 = function(date,locale){
+  const 计算过去 = (date1, date2) =>     
+  Math.round(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24));
+
+  const 过去 = 计算过去(new Date(),date);
+  console.log(过去);
+
+  if(过去 === 0) return '今天';
+  if(过去 === 1) return '昨天';
+  if(过去 <= 7) return `${过去} 天之前`
+  // else{
+  //   const 日 = `${date.getDate()}`.padStart(2, 0);
+  //   const 月 = `${date.getMonth() + 1}`.padStart(2, 0);
+  //   const 年 = date.getFullYear();
+  // return `${日}/${月}/${年}`;
+  // };
+  return new Intl.DateTimeFormat(locale).format(date);
+};
+
+//格式化数字函数
+
+const formatCur = function(value,locale,currency){
+      return new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency: currency, //使得每一个存取记录都可以
+      }).format(value);
+};
+
+const displayMovements = function (acc, sort = false) 
+{
   containerMovements.innerHTML = '';
 
-  const movs = sort ? movements.slice().sort((a, b) => a - b) : movements;
+  const movs = sort 
+  ? acc.movements.slice().sort((a, b) => a - b) 
+  : acc.movements;
 
   movs.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
+
+    const date = new Date(acc.movementsDates[i]); 
+    const displayDate = 格式化(date,acc.locale);
+
+    const 格式化mov = formatCur(mov,acc.locale,acc.currency);
     const html = `
       <div class="movements__row">
         <div class="movements__type movements__type--${type}">${
       i + 1
     } ${type}</div>
-        <div class="movements__value">${mov.toFixed(2)}</div>
+        <div class="movements__date">${displayDate}</div>
+        <div class="movements__value">${格式化mov}</div>
       </div>
     `;
     containerMovements.insertAdjacentHTML('afterbegin', html);
@@ -143,8 +181,10 @@ const displayMovements = function (movements, sort = false) {
 //函数2  创建一个累加使用Reduce的函数 来更改html上的总和
 const labelBalance = document.querySelector('.balance__value');
 const calcDisplayBalance = function (acc) {
-  acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `${acc.balance.toFixed(2)} EUR`;
+  acc.balance = acc.movements.reduce((acc,mov) => 
+  acc + mov, 0);
+  labelBalance.textContent = formatCur(acc.balance,
+  acc.locale,acc.currency);
 };
 
 //函数3 用来显示支出和收入额度
@@ -152,12 +192,14 @@ const calcDisplaySummary = function (acc) {
   const 收入 = acc.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumIn.textContent = `${收入.toFixed(2)}＄`;
+  labelSumIn.textContent = formatCur(收入, acc.locale, acc.currency);
+
 
   const 支出 = acc.movements
     .filter(mov => mov <= 0)
     .reduce((acc, mov) => acc + mov, 0);
-  labelSumOut.textContent = `${Math.abs(支出.toFixed(2))}＄`;
+  labelSumOut.textContent = formatCur(Math.abs(支出), acc.locale, acc.currency);
+
 
   const 利息 = acc.movements
     .filter(mov => mov > 0)
@@ -167,8 +209,10 @@ const calcDisplaySummary = function (acc) {
       return int >= 1;
     })
     .reduce((acc, int) => acc + int, 0);
-  labelSumInterest.textContent = `${利息}＄`;
+  labelSumInterest.textContent = formatCur(
+    利息,acc.locale,acc.currency);
 };
+
 const 用户名缩写 = function (acc) {
   acc.forEach(function (acc) {
     acc.username = acc.owner
@@ -182,7 +226,7 @@ const 用户名缩写 = function (acc) {
 
 const updateUI = function (acc) {
   // 显示存取钱
-  displayMovements(acc.movements);
+  displayMovements(acc);
   //显示Balance
   calcDisplayBalance(acc);
   //显示总账
@@ -192,9 +236,40 @@ const updateUI = function (acc) {
 /////////////////////////////////////////////////
 // 登录界面
 let 当前账户;
+
+//假设登入
+当前账户 = account6
+updateUI(当前账户);
+containerApp.style.opacity = 100;
+
+//创建一个API
+const now = new Date();
+const options = {
+  hour: 'numeric',
+  minute: 'numeric',
+  day: 'numeric',
+  month: 'numeric',
+  year: 'numeric',
+  weekday: 'long', //添加了这一行 会显示As of Thursday, December 15, 2022 at 4:00 PM
+};
+
+const locale = navigator.language;
+console.log(locale);
+
+labelDate.textContent = new Intl.DateTimeFormat
+(当前账户.locale,
+  options
+  ).format(now); //这里的locale是代表着当地语言 当地环境
+
+
+
 btnLogin.addEventListener('click', function (e) {
   e.preventDefault(); //必须要加上这个 这是以前的知识点
   console.log('已经登录了');
+
+
+
+
 
   当前账户 = account.find(acc => acc.owner === inputLoginUsername.value);
   console.log(当前账户);
@@ -202,6 +277,9 @@ btnLogin.addEventListener('click', function (e) {
     //登录显示UI
     labelWelcome.textContent = `欢迎回来,${当前账户.owner.split(' ')[0]}`;
     containerApp.style.opacity = 100;
+
+    //创建一个新的时间
+
     //清除字段
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
@@ -232,6 +310,11 @@ btnTransfer.addEventListener('click', function (e) {
   //转换账户
   当前账户.movements.push(-amount);
   receiverAcc.movements.push(amount);
+  //添加一个贷款时变动时间功能
+
+  当前账户.movementsDates.push(new Date().toISOString());
+  receiverAcc.movementsDates.push(new Date().toISOString());
+
   //更新UI
   updateUI(当前账户);
 });
@@ -268,6 +351,7 @@ btnLoan.addEventListener('click', function (e) {
     //添加movments
     当前账户.movements.push(amount);
 
+    当前账户.movementsDates.push(new Date().toISOString());
     //updateUI
     updateUI(当前账户);
   }
@@ -305,32 +389,27 @@ labelBalance.addEventListener('click',function(){
   });
 });
 
-//BigInt 原始数据类型 是es2020出现的新的
-console.log(2 ** 52 - 1); //4503599627370495
-console.log(Number.MAX_SAFE_INTEGER); //9007199254740991
-console.log(2 ** 53 + 1 ) //9007199254740992
-console.log(2 ** 53 + 2); //9007199254740994
-console.log(2 ** 53 + 3); //9007199254740996
-console.log(2 ** 53 + 4); //9007199254740996 这些数字都不准确 所以有了BigInt
+//初始化日期
+//初始化常规数字
+const num = 3884764.23
 
-console.log(428937498272375203572472034);//4.289374982723752e+26
-console.log(428937498272375203572472034n); //428937498272375203572472034n
-console.log(BigInt(428937498272375203572472034));//428937498272375209566666752n
+const options1 = {
+  style:'currency',
+  unit:'celsius',
+  currency:'EUR',
+  // useGrouping:false,
+};
 
-//Operations
-console.log(10000n + 10000n); //20000n
-console.log(892374832019724073048n*8340237183408309n);
-const huge = 2389748923774134n
-const num = 23;
-console.log(huge * BigInt(num)); //54964225246805082n
 
-console.log(20n>15); //true
-console.log(2n === 20); //false
-console.log(typeof 20n); //bigint
-console.log(20n == '20') //true
+console.log('US:', new Intl.NumberFormat
+('en-US').format(num));//US: 3,884,764.23
+console.log('Germany:', new Intl.NumberFormat
+('de-DE').format(num));//Germany: 3,884,764.23
+console.log('Syria:', new Intl.NumberFormat
+('ar-SY').format(num));//Syria: ٣٬٨٨٤٬٧٦٤٫٢٣
+console.log(
+  navigator.language,
+  new Intl.NumberFormat
+(navigator.language,options)
+.format(num));//zh-CN 3,884,764.23
 
-console.log(huge + 'is REALLY big !!')
-
-//除法的显示
-console.log( 10n / 3n); //3n
-console.log(10 / 3) //3.3333333333333335
