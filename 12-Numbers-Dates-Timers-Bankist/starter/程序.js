@@ -224,6 +224,33 @@ const 用户名缩写 = function (acc) {
 };
 用户名缩写(account);
 
+//设置一个自动登出系统的功能
+const 登录计时 = function(){
+  const tick = function () {
+    //并且把它转换成每分每秒
+      const min = String(Math.trunc(time / 60)).padStart(2, 0);
+      const sec = String(time % 60).padStart(2, 0);
+      //调用时间 每秒钟都显示
+      //调用并显示到ui
+      labelTimer.textContent = `${min}:${sec}`;
+      //减少一秒
+      time--;
+      //当只剩下0秒的时候 登出并且可视化
+      if (time === 0) {
+        clearInterval(timer);
+        labelWelcome.textContent = `请重新登录,${当前账户.owner.split(' ')[0]}`;
+        containerApp.style.opacity = 0;
+      };
+
+  };
+  //设置一个5分钟时间
+  let time = 30;
+  tick();
+  const timer = setInterval(tick, 1000);
+  
+  return timer;
+};
+
 const updateUI = function (acc) {
   // 显示存取钱
   displayMovements(acc);
@@ -238,9 +265,9 @@ const updateUI = function (acc) {
 let 当前账户;
 
 //假设登入
-当前账户 = account6
-updateUI(当前账户);
-containerApp.style.opacity = 100;
+// 当前账户 = account6
+// updateUI(当前账户);
+// containerApp.style.opacity = 100;
 
 //创建一个API
 const now = new Date();
@@ -257,9 +284,9 @@ const locale = navigator.language;
 console.log(locale);
 
 labelDate.textContent = new Intl.DateTimeFormat
-(当前账户.locale,
-  options
-  ).format(now); //这里的locale是代表着当地语言 当地环境
+// (当前账户.locale,
+//   options
+//   ).format(now); //这里的locale是代表着当地语言 当地环境
 
 
 
@@ -284,6 +311,7 @@ btnLogin.addEventListener('click', function (e) {
     inputLoginUsername.value = inputLoginPin.value = '';
     inputLoginPin.blur();
 
+    登录计时();
     //更新UI
     updateUI(当前账户);
     console.log('登陆成功');
@@ -348,12 +376,15 @@ btnLoan.addEventListener('click', function (e) {
   const amount = Math.floor(inputLoanAmount.value);
 
   if (amount > 0 && 当前账户.movements.some(mov => mov >= amount * 0.1)) {
-    //添加movments
-    当前账户.movements.push(amount);
+    //添加了时间间隔
+    setTimeout(function () {
+      //添加movments
+      当前账户.movements.push(amount);
 
-    当前账户.movementsDates.push(new Date().toISOString());
-    //updateUI
-    updateUI(当前账户);
+      当前账户.movementsDates.push(new Date().toISOString());
+      //updateUI
+      updateUI(当前账户);
+    },3000);
   }
 });
 

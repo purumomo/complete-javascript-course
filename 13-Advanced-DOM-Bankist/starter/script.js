@@ -18,6 +18,10 @@ const closeModal = function () {
   overlay.classList.add('hidden');
 };
 
+//让所有按钮都发生反应
+
+btnsOpenModal.forEach(btn => btn.addEventListener('click',openModal));
+
 for (let i = 0; i < btnsOpenModal.length; i++)
   btnsOpenModal[i].addEventListener('click', openModal);
 
