@@ -35,44 +35,88 @@ document.addEventListener('keydown', function (e) {
 });
 
 
-//关于选择
-console.log(document.documentElement);
-console.log(document.head);
-console.log(document.body);
+logo.className = 'jones';
 
-document.querySelector('.header');
-const all = document.querySelectorAll('.section');
-console.log(all);
+//第一个功能 点击Learn more滑动到第一个窗口
+const btnScrollTo = document.querySelector('.btn--scroll-to');
+const section1 = document.querySelector('#section--1');
 
-document.getElementById('seciton--1');
+btnScrollTo.addEventListener('click',function(e){
+  const s = section1.getBoundingClientRect();
+  console.log(s);
 
-//选择所有名字中有button的元素
-const button = document.getElementsByTagName('button');
-console.log(button);
+  console.log(e.target.getBoundingClientRect());
 
-//获取类
-console.log(document.getElementsByClassName('btn'));
+  console.log('current scroll (x/y)', window.pageXOffset, pageYOffset);
 
-//创建和插入元素
-//有一个快速创建元素的办法
-//.insertAdjacenHTML
-//创建了一个dom元素
+  console.log(
+    'height/widhth vieport',
+    document.documentElement.clientHeight,
+    document.documentElement.clientWidth
+  );
+  //滑动
+  //第一种方法
+  // window.scrollTo(
+  //   s.left + window.pageXOffset,
+  //   s.top + window.pageYOffset
+  //   );
 
-const message = document.createElement('div');
-message.classList.add('cookie-message'); //创建dom元素的时候 命名必须是- 不能有空格
-// message.textContent = '我们使用cookied来改善功能';
-message.innerHTML = 
-  '我们使用cookied来改善功能. <button class = "btn btn--close-cookie">Got it!</button>';
-
-header.prepend(message);
-// header.append(message);
-header.append(message.cloneNode(true));
-// header.before(message);
-// header.after(message);
-
-//删除元素
-document.querySelector('.btn--close-cookie').
-addEventListener('click',function(){
-  // message.remove()
-  message.parentElement.removeChild(message);
+  //第二种方法
+  window.scrollTo({
+    left:s.left + window.pageXOffset,
+    top:section1.top + window.pageYOffset,
+    behavior:'smooth',
+  });
+  section1.scrollIntoView({ behavior: 'smooth'});
 });
+
+
+
+
+// //事件的种类 
+// //mouseenter
+// const h1 = document.querySelector('h1');
+// h1.addEventListener('mouseenter',function(e){
+//   alert('addEventListener:Great!!!!')
+// });
+// //mouseenter的老派做法 效果一样
+// const ah1 = function(e){
+//   alert('addEventListener:Great!!!!');
+//   // h1.removeEventListener('mouseenter');
+// };
+
+// h1.addEventListener('mouseenter',ah1);
+// setTimeout(() =>h1.removeEventListener('mouseenter',ah1,3000))
+
+
+//创建随机颜色
+//讲解这个的原因是为了了解dom树的传播
+//参考DOM冒泡的阶段
+//这里是关于捕获的内容
+
+const randomInt = (min,max) => 
+  Math.floor(Math.random() * (max - min + 1) + min);
+const 随机颜色 = () => 
+  `rgb(${randomInt(0,255)},${randomInt(0,255)},${randomInt(0,255)})`;
+
+  document.querySelector('.nav__link').addEventListener
+  ('click',function(e){
+      this.style.backgroundColor = 随机颜色()
+      console.log('LINK',e.target,e.currentTarget); //这里是发生事件的地方
+      console.log(e.currentTarget === this);
+
+      // e.stopPropagation(); //停止传播
+    });
+
+  document.querySelector('.nav__links').addEventListener
+    ('click',function(e){
+      this.style.backgroundColor = 随机颜色();
+      console.log('CONTAINER',e.target,e.currentTarget);
+    });
+  document.querySelector('.nav').addEventListener
+  ('click',function(e){
+    this.style.backgroundColor = 随机颜色();
+    console.log('NAV',e.target,e.currentTarget);
+  },
+  true
+  );
