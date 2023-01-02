@@ -1,23 +1,22 @@
 'use strict';
 
-///////////////////////////////////////
-// Modal window
-
+//创建模块
 const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
-
+const btnScrollTo = document.querySelector('.btn--scroll-to');
+const section1 = document.querySelector('#section--1');
+///////////////////////////////////////
+// Modal window
 const openModal = function () {
   modal.classList.remove('hidden');
   overlay.classList.remove('hidden');
 };
-
 const closeModal = function () {
   modal.classList.add('hidden');
   overlay.classList.add('hidden');
 };
-
 //让所有按钮都发生反应
 
 btnsOpenModal.forEach(btn => btn.addEventListener('click',openModal));
@@ -38,8 +37,6 @@ document.addEventListener('keydown', function (e) {
 logo.className = 'jones';
 
 //第一个功能 点击Learn more滑动到第一个窗口
-const btnScrollTo = document.querySelector('.btn--scroll-to');
-const section1 = document.querySelector('#section--1');
 
 btnScrollTo.addEventListener('click',function(e){
   const s = section1.getBoundingClientRect();
@@ -120,3 +117,11 @@ const 随机颜色 = () =>
   },
   true
   );
+
+  //网页引导
+  //节点
+  document.querySelectorAll('.nav__link').forEach(function(el){
+    el.addEventListener('click',function(e){
+      console.log('aaa')
+    })
+  })
